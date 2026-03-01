@@ -1,4 +1,4 @@
-from domain.enums import CrossDocLabel, QuoteLabel, SupportLabel
+from domain.enums import CrossDocLabel, FindingKind, QuoteLabel, SupportLabel
 from domain.schemas import (
     CitationItem,
     CrossDocAssessment,
@@ -7,12 +7,14 @@ from domain.schemas import (
     DocRecord,
     ExtractionResult,
     FactClaim,
+    Finding,
     QuoteAssessment,
     QuoteItem,
     RetrievalStatus,
     SourceRecord,
     Span,
     SupportAssessment,
+    VerificationReport,
 )
 
 
@@ -126,3 +128,34 @@ def test_cross_doc_assessment():
     a = CrossDocAssessment(claim_id="c1", label=CrossDocLabel.SUPPORTED, confidence=0.8, reason="Doc supports.")
     assert a.claim_id == "c1"
     assert a.label == CrossDocLabel.SUPPORTED
+
+
+def test_finding_kind_enum():
+    assert FindingKind.CITATION_SUPPORT.value == "citation_support"
+    assert FindingKind.QUOTE_ACCURACY.value == "quote_accuracy"
+    assert FindingKind.CROSS_DOCUMENT_CONSISTENCY.value == "cross_document_consistency"
+
+
+def test_finding():
+    f = Finding(
+        id="citation_c1",
+        kind=FindingKind.CITATION_SUPPORT,
+        reference_id="c1",
+        status="supports",
+        confidence=0.9,
+        confidence_reason="Fits.",
+    )
+    assert f.id == "citation_c1"
+    assert f.kind == FindingKind.CITATION_SUPPORT
+    assert f.evidence_spans == []
+
+
+def test_verification_report_defaults():
+    r = VerificationReport()
+    assert r.citation_findings == []
+    assert r.quote_findings == []
+    assert r.cross_document_findings == []
+    assert r.findings == []
+    assert r.judicial_memo == ""
+    assert r.errors == []
+    assert r.timings_ms == {}

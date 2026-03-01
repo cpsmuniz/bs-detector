@@ -29,3 +29,9 @@ class CrossDocLabel(str, Enum):
     CONTRADICTED = "contradicted"
     PARTIALLY_SUPPORTED = "partially_supported"
     COULD_NOT_VERIFY = "could_not_verify"
+
+
+class FindingKind(str, Enum):
+    CITATION_SUPPORT = "citation_support"
+    QUOTE_ACCURACY = "quote_accuracy"
+    CROSS_DOCUMENT_CONSISTENCY = "cross_document_consistency"
