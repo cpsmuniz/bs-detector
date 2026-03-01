@@ -6,7 +6,7 @@ from domain.extraction import (
     link_quote_to_citation,
     run,
 )
-from domain.schemas import CitationItem, DocBundle, DocRecord, Span
+from domain.schemas import DocBundle, DocRecord, Span
 from infrastructure.doc_loader import load_case_docs
 
 
@@ -14,51 +14,21 @@ def test_link_quote_to_citation_empty_returns_none():
     assert link_quote_to_citation([], 10, "some text") is None
 
 
-def test_link_quote_to_citation_citation_not_in_text_returns_none():
-    c = CitationItem(
-        id="c1",
-        raw_citation="Never In Text",
-        normalized_citation="x",
-        proposition_text="p",
-        motion_span=Span(document_id="m", start=0, end=1),
-    )
+def test_link_quote_to_citation_citation_not_in_text_returns_none(make_citation):
+    c = make_citation("c1", "Never In Text")
     assert link_quote_to_citation([c], 0, "other text") is None
 
 
-def test_link_quote_to_citation_returns_nearest_before():
-    c1 = CitationItem(
-        id="c1",
-        raw_citation="First",
-        normalized_citation="first",
-        proposition_text="p",
-        motion_span=Span(document_id="m", start=0, end=5),
-    )
-    c2 = CitationItem(
-        id="c2",
-        raw_citation="Second",
-        normalized_citation="second",
-        proposition_text="p",
-        motion_span=Span(document_id="m", start=10, end=16),
-    )
+def test_link_quote_to_citation_returns_nearest_before(make_citation):
+    c1 = make_citation("c1", "First")
+    c2 = make_citation("c2", "Second")
     text = "First xxx Second"
     assert link_quote_to_citation([c1, c2], 3, text) == "c1"
 
 
-def test_link_quote_to_citation_returns_nearest_after():
-    c1 = CitationItem(
-        id="c1",
-        raw_citation="First",
-        normalized_citation="first",
-        proposition_text="p",
-        motion_span=Span(document_id="m", start=0, end=5),
-    )
-    c2 = CitationItem(
-        id="c2",
-        raw_citation="Second",
-        normalized_citation="second",
-        proposition_text="p",
-        motion_span=Span(document_id="m", start=10, end=16),
-    )
+def test_link_quote_to_citation_returns_nearest_after(make_citation):
+    c1 = make_citation("c1", "First")
+    c2 = make_citation("c2", "Second")
     text = "First xxx Second"
     assert link_quote_to_citation([c1, c2], 11, text) == "c2"
 

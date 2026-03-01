@@ -5,6 +5,8 @@ from domain.schemas import (
     DocRecord,
     ExtractionResult,
     QuoteItem,
+    RetrievalStatus,
+    SourceRecord,
     Span,
 )
 
@@ -60,3 +62,21 @@ def test_extraction_result_defaults():
     e = ExtractionResult()
     assert e.citations == []
     assert e.quotes == []
+
+
+def test_retrieval_status_enum_values():
+    assert RetrievalStatus.FOUND.value == "found"
+    assert RetrievalStatus.NOT_FOUND.value == "not_found"
+    assert RetrievalStatus.ERROR.value == "error"
+    assert RetrievalStatus.DISABLED.value == "disabled"
+
+
+def test_source_record_with_enum():
+    r = SourceRecord(
+        citation_id="c1",
+        normalized_citation="X (2020)",
+        retrieval_status=RetrievalStatus.FOUND,
+        authority_text="snippet",
+    )
+    assert r.retrieval_status == RetrievalStatus.FOUND
+    assert r.retrieval_status.value == "found"

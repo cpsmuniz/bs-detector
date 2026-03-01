@@ -2,6 +2,8 @@ from __future__ import annotations
 
 from pydantic import BaseModel, Field
 
+from domain.enums import RetrievalStatus
+
 
 class Span(BaseModel):
     document_id: str
@@ -48,3 +50,12 @@ class QuoteItem(BaseModel):
 class ExtractionResult(BaseModel):
     citations: list[CitationItem] = Field(default_factory=list)
     quotes: list[QuoteItem] = Field(default_factory=list)
+
+
+class SourceRecord(BaseModel):
+    citation_id: str
+    normalized_citation: str
+    retrieval_status: RetrievalStatus
+    source_url: str | None = None
+    authority_text: str | None = None
+    error: str | None = None
