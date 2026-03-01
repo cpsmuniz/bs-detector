@@ -1,13 +1,18 @@
+from domain.enums import CrossDocLabel, QuoteLabel, SupportLabel
 from domain.schemas import (
     CitationItem,
+    CrossDocAssessment,
     DocBundle,
     DocChunk,
     DocRecord,
     ExtractionResult,
+    FactClaim,
+    QuoteAssessment,
     QuoteItem,
     RetrievalStatus,
     SourceRecord,
     Span,
+    SupportAssessment,
 )
 
 
@@ -80,3 +85,44 @@ def test_source_record_with_enum():
     )
     assert r.retrieval_status == RetrievalStatus.FOUND
     assert r.retrieval_status.value == "found"
+
+
+def test_support_label_enum():
+    assert SupportLabel.SUPPORTS.value == "supports"
+    assert SupportLabel.COULD_NOT_VERIFY.value == "could_not_verify"
+
+
+def test_quote_label_enum():
+    assert QuoteLabel.EXACT.value == "exact"
+    assert QuoteLabel.MATERIAL_DIFFERENCE.value == "material_difference"
+
+
+def test_cross_doc_label_enum():
+    assert CrossDocLabel.SUPPORTED.value == "supported"
+    assert CrossDocLabel.CONTRADICTED.value == "contradicted"
+
+
+def test_support_assessment():
+    sp = Span(document_id="d", start=0, end=1)
+    a = SupportAssessment(citation_id="c1", label=SupportLabel.SUPPORTS, confidence=0.9, reason="Fits.")
+    assert a.label == SupportLabel.SUPPORTS
+    assert a.evidence_spans == []
+
+
+def test_quote_assessment():
+    a = QuoteAssessment(quote_id="q1", label=QuoteLabel.EXACT, confidence=1.0, reason="Match.")
+    assert a.quote_id == "q1"
+    assert a.label == QuoteLabel.EXACT
+
+
+def test_fact_claim():
+    sp = Span(document_id="m", start=0, end=10, excerpt="A fact.")
+    fc = FactClaim(id="claim_001", claim_text="A fact.", claim_type="fact", motion_span=sp, source_section="Facts")
+    assert fc.id == "claim_001"
+    assert fc.motion_span.excerpt == "A fact."
+
+
+def test_cross_doc_assessment():
+    a = CrossDocAssessment(claim_id="c1", label=CrossDocLabel.SUPPORTED, confidence=0.8, reason="Doc supports.")
+    assert a.claim_id == "c1"
+    assert a.label == CrossDocLabel.SUPPORTED

@@ -1,0 +1,29 @@
+output_keys:
+  support_assessments: support_assessments
+  quote_assessments: quote_assessments
+  claims: claims
+  assessments: assessments
+
+fields:
+  citation_id: citation_id
+  quote_id: quote_id
+  claim_id: claim_id
+  label: label
+  confidence: confidence
+  reason: reason
+  id: id
+  claim_text: claim_text
+  claim_type: claim_type
+  source_section: source_section
+  motion_span: motion_span
+  document_id: document_id
+  start: start
+  end: end
+  excerpt: excerpt
+
+schemas:
+  support: "{citation_id, label, confidence, reason}"
+  quote: "{quote_id, label, confidence, reason}"
+  claim: "{id, claim_text, claim_type, source_section, motion_span}"
+  motion_span_fields: "document_id, start, end, excerpt"
+  assessment: "{claim_id, label, confidence, reason}"

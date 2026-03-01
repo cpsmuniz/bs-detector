@@ -1,7 +1,10 @@
 fastapi
 uvicorn
 openai
+openai-guardrails
 python-dotenv
 httpx
+Jinja2
+PyYAML
 pytest
 pytest-cov

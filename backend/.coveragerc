@@ -1,6 +1,6 @@
 [run]
 source = .
-omit = infrastructure/llm.py,tests/*,venv/*,.venv/*
+omit = tests/*,venv/*,.venv/*
 
 [report]
 exclude_lines =

@@ -1,12 +1,8 @@
-import os
 from pathlib import Path
 
-from dotenv import load_dotenv
+from infrastructure.env_loader import require_path
 
-load_dotenv()
-
-_DEFAULT_DOCS_DIR = Path(__file__).resolve().parent.parent.parent / "documents"
-DOCS_DIR = Path(os.environ["DOCS_DIR"]).resolve() if os.environ.get("DOCS_DIR") else _DEFAULT_DOCS_DIR
+DOCS_DIR = require_path("DOCS_DIR")
 
 
 def load_case_docs(docs_dir: Path | None = None) -> dict[str, str]:

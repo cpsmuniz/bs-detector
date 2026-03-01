@@ -1,17 +1,14 @@
 from __future__ import annotations
 
 import json
-import os
 from pathlib import Path
 
 from domain.schemas import CitationItem, RetrievalStatus, SourceRecord
-from infrastructure.paths import evals_fixture_path
+from infrastructure.env_loader import require_path
 
 
 def get_overrides_path() -> Path:
-    if os.environ.get("SOURCE_OVERRIDES_PATH"):
-        return Path(os.environ["SOURCE_OVERRIDES_PATH"]).resolve()
-    return evals_fixture_path("source_overrides.json")
+    return require_path("SOURCE_OVERRIDES_PATH")
 
 
 def load_override_fixture(path: Path | None = None) -> dict[str, dict]:

@@ -2,7 +2,7 @@ from __future__ import annotations
 
 from pydantic import BaseModel, Field
 
-from domain.enums import RetrievalStatus
+from domain.enums import CrossDocLabel, QuoteLabel, RetrievalStatus, SupportLabel
 
 
 class Span(BaseModel):
@@ -59,3 +59,38 @@ class SourceRecord(BaseModel):
     source_url: str | None = None
     authority_text: str | None = None
     error: str | None = None
+
+
+class SupportAssessment(BaseModel):
+    citation_id: str
+    label: SupportLabel
+    confidence: float = Field(ge=0.0, le=1.0)
+    reason: str
+    evidence_spans: list[Span] = Field(default_factory=list)
+    uncertainty_reason: str | None = None
+
+
+class QuoteAssessment(BaseModel):
+    quote_id: str
+    label: QuoteLabel
+    confidence: float = Field(ge=0.0, le=1.0)
+    reason: str
+    evidence_spans: list[Span] = Field(default_factory=list)
+    uncertainty_reason: str | None = None
+
+
+class FactClaim(BaseModel):
+    id: str
+    claim_text: str
+    claim_type: str
+    motion_span: Span
+    source_section: str
+
+
+class CrossDocAssessment(BaseModel):
+    claim_id: str
+    label: CrossDocLabel
+    confidence: float = Field(ge=0.0, le=1.0)
+    reason: str
+    evidence_spans: list[Span] = Field(default_factory=list)
+    uncertainty_reason: str | None = None
