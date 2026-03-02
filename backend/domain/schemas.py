@@ -106,6 +106,11 @@ class Finding(BaseModel):
     evidence_spans: list[Span] = Field(default_factory=list)
 
 
+class JudicialMemo(BaseModel):
+    text: str
+    supporting_finding_ids: list[str] = Field(default_factory=list)
+
+
 class VerificationReport(BaseModel):
     citation_findings: list[Finding] = Field(default_factory=list)
     quote_findings: list[Finding] = Field(default_factory=list)
