@@ -5,9 +5,12 @@ services:
       - "8002:8002"
     volumes:
       - ./backend:/app
+      - ./documents:/documents
     env_file:
       - path: .env
         required: false
+    environment:
+      DOCS_DIR: /documents
 
   frontend:
     build: ./frontend

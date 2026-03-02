@@ -1,7 +1,7 @@
-from fastapi import FastAPI
+from fastapi import FastAPI, Body
 from fastapi.middleware.cors import CORSMiddleware
 
-from application.analyze_docs import analyze_documents
+from application.runner import run_pipeline
 
 app = FastAPI()
 
@@ -20,5 +20,7 @@ async def health() -> dict[str, str]:
 
 
 @app.post("/analyze")
-async def analyze():
-    return analyze_documents()
+async def analyze(body: dict | None = Body(None)):
+    use_web_retrieval = body.get("use_web_retrieval", False) if body else False
+    report = run_pipeline(docs_dir=None, use_web_retrieval=use_web_retrieval)
+    return {"report": report}
