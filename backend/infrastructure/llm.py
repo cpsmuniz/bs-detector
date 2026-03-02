@@ -45,10 +45,27 @@ def call_llm(
     return response.choices[0].message.content
 
 
+def _strip_markdown_json_fence(raw: str) -> str:
+    """Remove optional markdown code fence (e.g. ```json\\n...\\n```) so json.loads can parse."""
+    s = (raw or "").strip()
+    if not s:
+        return s
+    if s.startswith("```"):
+        # Find first newline after opening fence (e.g. ``` or ```json)
+        idx = s.find("\n")
+        if idx != -1:
+            s = s[idx + 1 :]
+        # Remove trailing ``` if present
+        if s.rstrip().endswith("```"):
+            s = s[: s.rstrip().rfind("```")].rstrip()
+    return s
+
+
 def call_llm_json(
     messages: list[dict],
     model: str | None = None,
     temperature: float | None = None,
 ) -> dict:
     raw = call_llm(messages, model=model, temperature=temperature)
-    return json.loads(raw)
+    to_parse = _strip_markdown_json_fence(raw or "")
+    return json.loads(to_parse or "{}")

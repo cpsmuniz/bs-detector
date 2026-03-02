@@ -105,8 +105,10 @@ def evaluate_citations_and_quotes(
             ])
             if not isinstance(payload, dict):
                 payload = {}
+            support_list = payload.get(contract["support_assessments"]) or []
+            quote_list = payload.get(contract["quote_assessments"]) or []
             # Match each support assessment back to the right citation by citation_id and fill that slot
-            for sa in payload.get(contract["support_assessments"]) or []:
+            for sa in support_list:
                 cid = sa.get(contract["citation_id"])
                 if not cid:
                     continue
@@ -121,7 +123,7 @@ def evaluate_citations_and_quotes(
                         )
                         break
             # Same idea for quote assessments: match by quote_id and fill the slot
-            for qa in payload.get(contract["quote_assessments"]) or []:
+            for qa in quote_list:
                 qid = qa.get(contract["quote_id"])
                 if not qid:
                     continue

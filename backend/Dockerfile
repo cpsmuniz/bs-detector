@@ -10,4 +10,6 @@ WORKDIR /app
 
 COPY . .
 
+COPY evals/fixtures /evals-fixtures
+
 ENTRYPOINT ["./entrypoint.sh"]

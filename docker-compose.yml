@@ -11,6 +11,7 @@ services:
         required: false
     environment:
       DOCS_DIR: /documents
+      SOURCE_OVERRIDES_PATH: /app/evals/fixtures/source_overrides.json
 
   frontend:
     build: ./frontend

@@ -1,10 +1,13 @@
 from __future__ import annotations
 
 import json
+import logging
 from pathlib import Path
 
 from domain.schemas import CitationItem, RetrievalStatus, SourceRecord
 from infrastructure.env_loader import require_path
+
+logger = logging.getLogger(__name__)
 
 
 def get_overrides_path() -> Path:
@@ -14,9 +17,19 @@ def get_overrides_path() -> Path:
 def load_override_fixture(path: Path | None = None) -> dict[str, dict]:
     target = path if path is not None else get_overrides_path()
     if not target.exists():
+        logger.warning("No override file at %s; using 0 citation overrides", target)
         return {}
-    data = json.loads(target.read_text())
-    return data if isinstance(data, dict) else {}
+    try:
+        data = json.loads(target.read_text())
+    except Exception:
+        return {}
+    overrides = data if isinstance(data, dict) else {}
+    logger.info(
+        "Loaded %d citation overrides from %s",
+        len(overrides),
+        target,
+    )
+    return overrides
 
 
 def fetch_sources(
